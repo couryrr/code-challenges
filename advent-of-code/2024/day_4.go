@@ -17,7 +17,6 @@ func main() {
 	fmt.Println(search_one())
 	
 	//not correct yet...
-	word = []byte("MAS")
 	fmt.Println(search_two())
 }
 
@@ -63,26 +62,27 @@ func search_one() int{
 
 func search_two() int {
 	count := 0
+	sum := byte('M') + byte('S')
 	for r := range len(input) {
 		for c := range len(input[r]) {
 			if input[r][c] == 'A' {
 				if r - 1 < 0 || r + 1 >= len(input) { 
-					break
+					continue
 				}
 
 				if c - 1 < 0 || c + 1 >= len(input[r+1]) {
-					break	
+					continue
 				}
 				
 				c1 := input[r-1][c-1]
 				c2 := input[r+1][c+1]
-				idk1 := (c1 == 'M' || c1 == 'S') && (c1 != c2)
+				idk1 := c1 + c2
 
 				c3 := input[r-1][c+1]
 				c4 := input[r+1][c-1]
-				idk2 := (c3 == 'M' || c3 == 'S') && (c3 != c4)
-
-				if idk1 && idk2 {
+				idk2 := c3 + c4
+				
+				if idk1 == sum && idk2 == sum {
 					count++
 				}
 			}
