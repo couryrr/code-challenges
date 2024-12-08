@@ -37,7 +37,11 @@ func eval(total, goal, pos int) bool {
 	if total == goal && pos == len(values) {
 		return true
 	}
-	
+
+	if total > goal {
+		return false
+	}
+
 	if pos + 1 > len(values)  {
 		return false
 	}
@@ -47,6 +51,10 @@ func eval(total, goal, pos int) bool {
 	}
 
 	if eval(total * values[pos], goal, pos+1) {
+		return true
+	}
+	concat, _ := strconv.Atoi(strconv.Itoa(total)+strconv.Itoa(values[pos]))
+	if eval(concat, goal, pos + 1) {
 		return true
 	}
 
