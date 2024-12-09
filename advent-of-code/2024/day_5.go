@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"slices"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -12,7 +13,10 @@ func main() {
 	file_name := "day_five.txt"
 
 	input := bytes.Split(GetDataForDay(url, file_name), []byte("\n\n"))
+	solution_1(input)
+}
 
+func solution_1(input [][]byte){
 	rules := bytes.Split(input[0], []byte("\n"))
 	ruleMap :=  make(map[int][]int)
 	for i := range rules {
@@ -24,7 +28,7 @@ func main() {
 	
 	tmp := bytes.Split(input[1], []byte("\n"))
 	var list [][]int 
-	for i := range len(tmp) - 1 { // -1 for the white space. I should handle this better...
+	for i := range len(tmp) {
 		var pages []int
 		page_list := bytes.Split(tmp[i], []byte(","))
 		for ii := range len(page_list) {
@@ -34,11 +38,11 @@ func main() {
 		list = append(list, pages)
 	}
 
-	input = nil
 	rules = nil
 	tmp = nil
 
-	total := 0
+	s1 := 0
+	s2 := 0
 	for i := range list {
 		found := false
 		for ii := range list[i] {
@@ -47,6 +51,7 @@ func main() {
 			for _, prev_page := range prev_pages {
 				if slices.Contains(page_rule, prev_page) {
 					found = true
+					s2 += solution_2(input, list[i])
 					break
 				}
 			}
@@ -55,9 +60,28 @@ func main() {
 			}
 		}
 		if !found {
-			total += list[i][len(list[i])/2]
+			s1 += list[i][len(list[i])/2]
 		}
+		fmt.Println(list[i])
 	}
 
-	fmt.Println(total)
+	fmt.Println(s1)
+	fmt.Println(s2)
+
+}
+
+func solution_2(input [][]byte, pages []int) int {
+	// so the map was not needed and probably made this harder
+	rules := string(input[0])
+	slices.SortStableFunc(pages, func(x, y int) int {
+		if strings.Contains(rules, strconv.Itoa(x)+"|"+strconv.Itoa(y)) {
+			return -1
+		}
+		if strings.Contains(rules, strconv.Itoa(x)+"|"+strconv.Itoa(y)) {
+			return 1
+		}
+		return 0
+	})
+	return pages[len(pages)/2]
+
 }
